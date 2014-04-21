@@ -7,3 +7,4 @@ It uses the C# api provided by Import.io and manipulates the Json data retrieved
 
 The manipulated data is then added to a Model for easy access across the Nancy framework.
 
+Note** there is currently no error handling
