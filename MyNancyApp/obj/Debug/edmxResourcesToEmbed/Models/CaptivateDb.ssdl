@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CaptivateDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Event">
+    <Key>
+      <PropertyRef Name="EventId" />
+    </Key>
+    <Property Name="EventId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="EventName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="EventNameHash" Type="varbinary" MaxLength="8000" StoreGeneratedPattern="Computed" />
+    <Property Name="CreatedAt" Type="datetime" />
+    <Property Name="UpdatedAt" Type="datetime" />
+  </EntityType>
+  <EntityType Name="EventInfo">
+    <Key>
+      <PropertyRef Name="EventInfoId" />
+    </Key>
+    <Property Name="EventInfoId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="EventId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="EventOwner" Type="nvarchar(max)" />
+    <Property Name="EventDescription" Type="nvarchar(max)" />
+    <Property Name="EventLocation" Type="nvarchar(max)" />
+    <Property Name="CreatedAt" Type="datetime" />
+    <Property Name="UpdatedAt" Type="datetime" />
+  </EntityType>
+  <EntityType Name="EventTicket">
+    <Key>
+      <PropertyRef Name="EventTicketId" />
+    </Key>
+    <Property Name="EventTicketId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EventId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="EventTicketCode" Type="nvarchar(max)" />
+    <Property Name="Invitees" Type="int" Nullable="false" />
+    <Property Name="Used" Type="char" MaxLength="2" />
+  </EntityType>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="PersonId" />
+    </Key>
+    <Property Name="PersonId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="EventTicketId" Type="int" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar(max)" />
+    <Property Name="LastName" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="TokenAssociate">
+    <Key>
+      <PropertyRef Name="TokenAssociateId" />
+    </Key>
+    <Property Name="TokenAssociateId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Token" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="CreatedAt" Type="datetime" />
+    <Property Name="UpdatedAt" Type="datetime" />
+  </EntityType>
+  <EntityType Name="TrackException">
+    <Key>
+      <PropertyRef Name="ExceptionId" />
+    </Key>
+    <Property Name="ExceptionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="HelpLink" Type="nvarchar(max)" />
+    <Property Name="HResult" Type="nvarchar(max)" />
+    <Property Name="InnerException" Type="nvarchar(max)" />
+    <Property Name="Message" Type="nvarchar(max)" />
+    <Property Name="Source" Type="nvarchar(max)" />
+    <Property Name="StackTrace" Type="nvarchar(max)" />
+    <Property Name="TargetSite" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="EmailAddress" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="EmailAddressHash" Type="varbinary" MaxLength="8000" StoreGeneratedPattern="Computed" />
+    <Property Name="Password" Type="nvarchar(max)" />
+    <Property Name="Salt" Type="nvarchar(max)" />
+    <Property Name="FirstName" Type="nvarchar(max)" />
+    <Property Name="LastName" Type="nvarchar(max)" />
+    <Property Name="CreatedAt" Type="datetime" />
+    <Property Name="UpdatedAt" Type="datetime" />
+  </EntityType>
+  <Association Name="FK_Event_User">
+    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="Event" Type="Self.Event" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Event">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EventInfo_Event">
+    <End Role="Event" Type="Self.Event" Multiplicity="1" />
+    <End Role="EventInfo" Type="Self.EventInfo" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="EventId" />
+      </Principal>
+      <Dependent Role="EventInfo">
+        <PropertyRef Name="EventInfoId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EventTicket_Event">
+    <End Role="Event" Type="Self.Event" Multiplicity="1" />
+    <End Role="EventTicket" Type="Self.EventTicket" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="EventId" />
+      </Principal>
+      <Dependent Role="EventTicket">
+        <PropertyRef Name="EventId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Person_EventTicket">
+    <End Role="EventTicket" Type="Self.EventTicket" Multiplicity="1" />
+    <End Role="Person" Type="Self.Person" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EventTicket">
+        <PropertyRef Name="EventTicketId" />
+      </Principal>
+      <Dependent Role="Person">
+        <PropertyRef Name="EventTicketId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FkUserId">
+    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="TokenAssociate" Type="Self.TokenAssociate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="TokenAssociate">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="CaptivateDbModelStoreContainer">
+    <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="EventInfo" EntityType="Self.EventInfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="EventTicket" EntityType="Self.EventTicket" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Person" EntityType="Self.Person" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TokenAssociate" EntityType="Self.TokenAssociate" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TrackException" EntityType="Self.TrackException" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Event_User" Association="Self.FK_Event_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="Event" EntitySet="Event" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EventInfo_Event" Association="Self.FK_EventInfo_Event">
+      <End Role="Event" EntitySet="Event" />
+      <End Role="EventInfo" EntitySet="EventInfo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EventTicket_Event" Association="Self.FK_EventTicket_Event">
+      <End Role="Event" EntitySet="Event" />
+      <End Role="EventTicket" EntitySet="EventTicket" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Person_EventTicket" Association="Self.FK_Person_EventTicket">
+      <End Role="EventTicket" EntitySet="EventTicket" />
+      <End Role="Person" EntitySet="Person" />
+    </AssociationSet>
+    <AssociationSet Name="FkUserId" Association="Self.FkUserId">
+      <End Role="User" EntitySet="User" />
+      <End Role="TokenAssociate" EntitySet="TokenAssociate" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

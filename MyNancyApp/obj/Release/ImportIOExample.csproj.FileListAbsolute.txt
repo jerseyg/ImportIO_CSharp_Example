@@ -1,0 +1,14 @@
+C:\BTSync\MyNancyApp\MyNancyApp\bin\MyNancyApp.dll.config
+C:\BTSync\MyNancyApp\MyNancyApp\bin\MyNancyApp.dll
+C:\BTSync\MyNancyApp\MyNancyApp\bin\MyNancyApp.pdb
+C:\BTSync\MyNancyApp\MyNancyApp\bin\Nancy.Authentication.Basic.dll
+C:\BTSync\MyNancyApp\MyNancyApp\bin\Nancy.Authentication.Forms.dll
+C:\BTSync\MyNancyApp\MyNancyApp\bin\Newtonsoft.Json.dll
+C:\BTSync\MyNancyApp\MyNancyApp\bin\RestSharp.dll
+C:\BTSync\MyNancyApp\MyNancyApp\bin\Nancy.Authentication.Basic.xml
+C:\BTSync\MyNancyApp\MyNancyApp\bin\Nancy.Authentication.Forms.xml
+C:\BTSync\MyNancyApp\MyNancyApp\bin\Newtonsoft.Json.xml
+C:\BTSync\MyNancyApp\MyNancyApp\bin\RestSharp.xml
+C:\BTSync\MyNancyApp\MyNancyApp\obj\Release\ImportIOExample.csprojResolveAssemblyReference.cache
+C:\BTSync\MyNancyApp\MyNancyApp\obj\Release\MyNancyApp.dll
+C:\BTSync\MyNancyApp\MyNancyApp\obj\Release\MyNancyApp.pdb

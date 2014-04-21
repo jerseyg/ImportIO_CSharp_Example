@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CaptivateDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Event">
+    <Key>
+      <PropertyRef Name="EventId" />
+    </Key>
+    <Property Name="EventId" Type="Guid" Nullable="false" />
+    <Property Name="UserId" Type="Guid" Nullable="false" />
+    <Property Name="EventName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="EventNameHash" Type="Binary" MaxLength="8000" FixedLength="false" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Event_User" FromRole="Event" ToRole="User" />
+    <NavigationProperty Name="EventInfo" Relationship="Self.FK_EventInfo_Event" FromRole="Event" ToRole="EventInfo" />
+    <NavigationProperty Name="EventTickets" Relationship="Self.FK_EventTicket_Event" FromRole="Event" ToRole="EventTicket" />
+  </EntityType>
+  <EntityType Name="EventInfo">
+    <Key>
+      <PropertyRef Name="EventInfoId" />
+    </Key>
+    <Property Name="EventInfoId" Type="Guid" Nullable="false" />
+    <Property Name="EventId" Type="Guid" Nullable="false" />
+    <Property Name="EventOwner" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="EventDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="EventLocation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Event" Relationship="Self.FK_EventInfo_Event" FromRole="EventInfo" ToRole="Event" />
+  </EntityType>
+  <EntityType Name="EventTicket">
+    <Key>
+      <PropertyRef Name="EventTicketId" />
+    </Key>
+    <Property Name="EventTicketId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EventId" Type="Guid" Nullable="false" />
+    <Property Name="EventTicketCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Invitees" Type="Int32" Nullable="false" />
+    <Property Name="Used" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+    <NavigationProperty Name="Event" Relationship="Self.FK_EventTicket_Event" FromRole="EventTicket" ToRole="Event" />
+    <NavigationProperty Name="People" Relationship="Self.FK_Person_EventTicket" FromRole="EventTicket" ToRole="Person" />
+  </EntityType>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="PersonId" />
+    </Key>
+    <Property Name="PersonId" Type="Guid" Nullable="false" />
+    <Property Name="EventTicketId" Type="Int32" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="EventTicket" Relationship="Self.FK_Person_EventTicket" FromRole="Person" ToRole="EventTicket" />
+  </EntityType>
+  <EntityType Name="TokenAssociate">
+    <Key>
+      <PropertyRef Name="TokenAssociateId" />
+    </Key>
+    <Property Name="TokenAssociateId" Type="Guid" Nullable="false" />
+    <Property Name="Token" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="UserId" Type="Guid" Nullable="false" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="User" Relationship="Self.FkUserId" FromRole="TokenAssociate" ToRole="User" />
+  </EntityType>
+  <EntityType Name="TrackException">
+    <Key>
+      <PropertyRef Name="ExceptionId" />
+    </Key>
+    <Property Name="ExceptionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="HelpLink" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="HResult" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="InnerException" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Source" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StackTrace" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TargetSite" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Guid" Nullable="false" />
+    <Property Name="EmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="EmailAddressHash" Type="Binary" MaxLength="8000" FixedLength="false" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Salt" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Events" Relationship="Self.FK_Event_User" FromRole="User" ToRole="Event" />
+    <NavigationProperty Name="TokenAssociates" Relationship="Self.FkUserId" FromRole="User" ToRole="TokenAssociate" />
+  </EntityType>
+  <Association Name="FK_Event_User">
+    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="Event" Type="Self.Event" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Event">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EventInfo_Event">
+    <End Role="Event" Type="Self.Event" Multiplicity="1" />
+    <End Role="EventInfo" Type="Self.EventInfo" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="EventId" />
+      </Principal>
+      <Dependent Role="EventInfo">
+        <PropertyRef Name="EventInfoId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EventTicket_Event">
+    <End Role="Event" Type="Self.Event" Multiplicity="1" />
+    <End Role="EventTicket" Type="Self.EventTicket" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="EventId" />
+      </Principal>
+      <Dependent Role="EventTicket">
+        <PropertyRef Name="EventId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Person_EventTicket">
+    <End Role="EventTicket" Type="Self.EventTicket" Multiplicity="1" />
+    <End Role="Person" Type="Self.Person" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EventTicket">
+        <PropertyRef Name="EventTicketId" />
+      </Principal>
+      <Dependent Role="Person">
+        <PropertyRef Name="EventTicketId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FkUserId">
+    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="TokenAssociate" Type="Self.TokenAssociate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="TokenAssociate">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="CaptivateEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Events" EntityType="Self.Event" />
+    <EntitySet Name="EventInfoes" EntityType="Self.EventInfo" />
+    <EntitySet Name="EventTickets" EntityType="Self.EventTicket" />
+    <EntitySet Name="People" EntityType="Self.Person" />
+    <EntitySet Name="TokenAssociates" EntityType="Self.TokenAssociate" />
+    <EntitySet Name="TrackExceptions" EntityType="Self.TrackException" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_Event_User" Association="Self.FK_Event_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Event" EntitySet="Events" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EventInfo_Event" Association="Self.FK_EventInfo_Event">
+      <End Role="Event" EntitySet="Events" />
+      <End Role="EventInfo" EntitySet="EventInfoes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EventTicket_Event" Association="Self.FK_EventTicket_Event">
+      <End Role="Event" EntitySet="Events" />
+      <End Role="EventTicket" EntitySet="EventTickets" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Person_EventTicket" Association="Self.FK_Person_EventTicket">
+      <End Role="EventTicket" EntitySet="EventTickets" />
+      <End Role="Person" EntitySet="People" />
+    </AssociationSet>
+    <AssociationSet Name="FkUserId" Association="Self.FkUserId">
+      <End Role="User" EntitySet="Users" />
+      <End Role="TokenAssociate" EntitySet="TokenAssociates" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
